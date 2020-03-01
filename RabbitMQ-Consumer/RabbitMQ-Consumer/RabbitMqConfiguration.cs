@@ -29,6 +29,11 @@ namespace RabbitMQ_Consumer
             return connectionFactory.CreateConnection();
         }
 
+        private void ConfigureQueue(string name, IModel model)
+        {
+            model.QueueDeclare(queue: name, durable: false, exclusive: false, autoDelete: false, arguments: null);
+        }
+
         public void Publish(string message)
         {
             ConfigureQueue(queueName, model);
@@ -47,7 +52,6 @@ namespace RabbitMQ_Consumer
 
                 if (!string.IsNullOrWhiteSpace(message))
                 {
-                    Thread.Sleep(3000);
                     model.BasicAck(@event.DeliveryTag, true);
                 }
 
@@ -55,10 +59,6 @@ namespace RabbitMQ_Consumer
             };
 
             model.BasicConsume(queue: queueName, autoAck: false, consumer: consumer);
-        }
-        private void ConfigureQueue(string name, IModel model)
-        {
-            model.QueueDeclare(queue: name, durable: false, exclusive: false, autoDelete: false, arguments: null);
         }
 
         public void Dispose()

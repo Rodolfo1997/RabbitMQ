@@ -2,6 +2,7 @@
 using RabbitMQ.Client.Events;
 using System;
 using System.Text;
+using System.Threading;
 
 namespace RabbitMQ_Processor
 {
@@ -28,6 +29,11 @@ namespace RabbitMQ_Processor
             return connectionFactory.CreateConnection();
         }
 
+        private void ConfigureQueue(string name, IModel model)
+        {
+            model.QueueDeclare(queue: name, durable: false, exclusive: false, autoDelete: false, arguments: null);
+        }
+
         public void Publish(string message)
         {
             ConfigureQueue(queueName, model);
@@ -43,15 +49,16 @@ namespace RabbitMQ_Processor
             {
                 var body = @event.Body;
                 var message = Encoding.UTF8.GetString(body);
+
+                if (!string.IsNullOrWhiteSpace(message))
+                {
+                    model.BasicAck(@event.DeliveryTag, true);
+                }
+
+                Console.WriteLine("Received Message = {0}", message);
             };
 
-            model.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
-
-        }
-
-        private void ConfigureQueue(string name, IModel model)
-        {
-            model.QueueDeclare(queue: name, durable: false, exclusive: false, autoDelete: false, arguments: null);
+            model.BasicConsume(queue: queueName, autoAck: false, consumer: consumer);
         }
 
         public void Dispose()

@@ -9,8 +9,8 @@ namespace RabbitMQ_Consumer
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("****Receive Messages*****");
 
-            var rabbitMqConfiguration = new RabbitMqConfiguration();
-            rabbitMqConfiguration.Listen();
+            var rabbitMqClient = new RabbitMqClient();
+            rabbitMqClient.Listen();
             Console.ReadKey();
         }
     }

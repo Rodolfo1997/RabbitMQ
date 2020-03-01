@@ -8,13 +8,13 @@ namespace RabbitMQ_Processor
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("****Send Messages*****");
-            var rabbitMqConfiguration = new RabbitMqConfiguration();
+            var rabbitMqClient = new RabbitMqClient();
 
             for (int i = 0; i < 100000; i++)
             {
                 var message = string.Concat("Olá Rodolfo ", i, " ", DateTime.Now);
 
-                rabbitMqConfiguration.Publish(message);
+                rabbitMqClient.Publish(message);
 
                 Console.WriteLine("Send Message = {0}", message);
             }

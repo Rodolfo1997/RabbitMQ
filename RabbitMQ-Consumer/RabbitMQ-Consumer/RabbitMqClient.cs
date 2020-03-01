@@ -2,18 +2,17 @@
 using RabbitMQ.Client.Events;
 using System;
 using System.Text;
-using System.Threading;
 
 namespace RabbitMQ_Consumer
 {
-    public class RabbitMqConfiguration : IDisposable
+    public class RabbitMqClient : IDisposable
     {
         private readonly string rabbitMqUrl = "amqp://guest:guest@localhost:5672";
         private readonly string queueName = "RabbitMQQueue-Rodolfo-one";
         private readonly IConnection connection;
         private readonly IModel model;
 
-        public RabbitMqConfiguration()
+        public RabbitMqClient()
         {
             this.connection = CreateConnection();
             this.model = connection.CreateModel();
